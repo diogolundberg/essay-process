@@ -19,11 +19,11 @@ namespace app.Controllers
   public class MessagesController : Controller
   {
 
-    IAmazonS3 S3 { get; set; }
+    private UploadService UploadService { get; set; }
 
-    public MessagesController(IAmazonS3 s3)
+    public MessagesController(UploadService uploadService)
     {
-      this.S3 = s3;
+      this.UploadService = uploadService;
     }
 
     [HttpGet]
@@ -39,7 +39,8 @@ namespace app.Controllers
       string key = info["object"].key;
       string bucket = info.bucket.name;
 
-      if (DownloadFile($"https://s3-sa-east-1.amazonaws.com/{bucket}/{key}", $"/Users/dclundberg/tmp/originais/{key}").Result) {
+      if (DownloadFile($"https://s3-sa-east-1.amazonaws.com/{bucket}/{key}", $"/Users/dclundberg/tmp/originais/{key}").Result)
+      {
 
         var processoSeletivo = new ProcessoSeletivo();
         processoSeletivo.CaminhoImagens = "/Users/dclundberg/tmp/originais";
@@ -52,7 +53,7 @@ namespace app.Controllers
         process.Process(key);
       }
 
-      return new OkObjectResult("ok");
+      return new OkObjectResult(UploadService.Run(bucket, $"/Users/dclundberg/tmp/recortadas/c_red_{key}", key).Result);
     }
     public async Task<bool> DownloadFile(string url, string path)
     {
