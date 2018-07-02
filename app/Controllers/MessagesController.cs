@@ -1,7 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
+using Amazon.S3;
+using Amazon.S3.Model;
+using app.Extensions;
+using app.Models;
+using app.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -10,6 +18,14 @@ namespace app.Controllers
   [Route("/")]
   public class MessagesController : Controller
   {
+
+    IAmazonS3 S3 { get; set; }
+
+    public MessagesController(IAmazonS3 s3)
+    {
+      this.S3 = s3;
+    }
+
     [HttpGet]
     public IActionResult Get()
     {
@@ -20,12 +36,36 @@ namespace app.Controllers
     public IActionResult Post([FromBody]dynamic value)
     {
       var info = value.Records.First.s3;
+      string key = info["object"].key;
+      string bucket = info.bucket.name;
 
-      return new OkObjectResult(new
+      if (DownloadFile($"https://s3-sa-east-1.amazonaws.com/{bucket}/{key}", $"/Users/dclundberg/tmp/originais/{key}").Result) {
+
+        var processoSeletivo = new ProcessoSeletivo();
+        processoSeletivo.CaminhoImagens = "/Users/dclundberg/tmp/originais";
+        processoSeletivo.CaminhoImagensProcessadas = "/Users/dclundberg/tmp/processadas";
+        processoSeletivo.CaminhoImagensRecortadas = "/Users/dclundberg/tmp/recortadas";
+        processoSeletivo.CaminhoImagensRejeitadas = "/Users/dclundberg/tmp/rejeitadas";
+        processoSeletivo.CaminhoImagensCorrecao = "/Users/dclundberg/tmp/correcao";
+
+        var process = new ProcessImage(processoSeletivo);
+        process.Process(key);
+      }
+
+      return new OkObjectResult("ok");
+    }
+    public async Task<bool> DownloadFile(string url, string path)
+    {
+      HttpClient client = new HttpClient();
+
+      await client.GetAsync(url).ContinueWith((requestTask) =>
       {
-        bucket = info.bucket.name,
-        key = info["object"].key,
+        HttpResponseMessage response = requestTask.Result;
+        response.EnsureSuccessStatusCode();
+        response.Content.ReadAsFileAsync(path, true);
       });
+
+      return System.IO.File.Exists(path);
     }
   }
 }
