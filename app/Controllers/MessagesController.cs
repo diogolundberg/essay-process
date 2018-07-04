@@ -1,35 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Amazon.S3;
-using Amazon.S3.Model;
-using app.Extensions;
+﻿using app.Extensions;
 using app.Models;
 using app.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace app.Controllers
 {
   [Route("/")]
   public class MessagesController : Controller
   {
-
     private UploadService UploadService { get; set; }
 
     public MessagesController(UploadService uploadService)
     {
       this.UploadService = uploadService;
-    }
-
-    [HttpGet]
-    public IActionResult Get()
-    {
-      return new OkObjectResult("ready");
     }
 
     [HttpPost]
@@ -53,8 +38,9 @@ namespace app.Controllers
         process.Process(key);
       }
 
-      return new OkObjectResult(UploadService.Run(bucket, $"/Users/dclundberg/tmp/recortadas/c_red_{key}", key).Result);
+      return new OkObjectResult(UploadService.Run(bucket, $"/Users/dclundberg/tmp/recortadas/c_red_{key}", $"correcao/{key}").Result);
     }
+
     public async Task<bool> DownloadFile(string url, string path)
     {
       HttpClient client = new HttpClient();

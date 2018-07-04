@@ -1,8 +1,7 @@
-
-using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace app.Extensions
 {

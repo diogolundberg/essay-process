@@ -4,11 +4,6 @@ namespace app.Models
 {
   public class ConvertedImageInfo
   {
-
-    public ConvertedImageInfo()
-    {
-
-    }
     public ConvertedImageInfo(Size originalSize, Size resultSize)
     {
       this.OriginalSize = originalSize;

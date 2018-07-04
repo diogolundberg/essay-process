@@ -19,7 +19,8 @@ namespace app.Extensions
       try
       {
         fileStream = new FileStream(pathname, FileMode.Create, FileAccess.Write, FileShare.None);
-        return content.CopyToAsync(fileStream).ContinueWith((copyTask) =>{
+        return content.CopyToAsync(fileStream).ContinueWith((copyTask) =>
+        {
           fileStream.Close();
         });
       }

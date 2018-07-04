@@ -4,11 +4,6 @@ namespace app.Models
 {
   public class ProcessoSeletivo
   {
-    public ProcessoSeletivo()
-    {
-
-    }
-
     public int IdProcessoSeletivo { get; set; }
     public String Codigo { get; set; }
     public DateTime Data { get; set; }
