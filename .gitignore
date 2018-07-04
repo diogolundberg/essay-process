@@ -273,7 +273,6 @@ paket-files/
 
 # Mac OSX indexer
 .DS_Store
-.DS_Store
 
 connections.config
 app.config
@@ -285,3 +284,4 @@ appsettings.json
 /Upload/Properties/launchSettings.json
 /SSO/Properties
 /.gitattributes
+Profile.local
