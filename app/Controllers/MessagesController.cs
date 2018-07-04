@@ -2,19 +2,24 @@
 using app.Models;
 using app.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace app.Controllers
 {
-  [Route("/")]
+  [Route("/[controller]")]
+  [Produces("application/json")]
   public class MessagesController : Controller
   {
-    private UploadService UploadService { get; set; }
+    private UploadService UploadService { get; }
+    private IConfiguration Configuration { get; }
 
-    public MessagesController(UploadService uploadService)
+    public MessagesController(UploadService uploadService, IConfiguration configuration)
     {
-      this.UploadService = uploadService;
+      UploadService = uploadService;
+      Configuration = configuration;
     }
 
     [HttpPost]
@@ -23,22 +28,25 @@ namespace app.Controllers
       var info = value.Records.First.s3;
       string key = info["object"].key;
       string bucket = info.bucket.name;
+      string root = Configuration.Get("contentRoot");
+      string source = Path.Combine(root, "tmp/originais");
+      string result = Path.Combine(root, "tmp/recortadas");
 
-      if (DownloadFile($"https://s3-sa-east-1.amazonaws.com/{bucket}/{key}", $"/Users/dclundberg/tmp/originais/{key}").Result)
+      if (DownloadFile($"https://s3-sa-east-1.amazonaws.com/{bucket}/{key}", $"{source}/{key}").Result)
       {
-
         var processoSeletivo = new ProcessoSeletivo();
-        processoSeletivo.CaminhoImagens = "/Users/dclundberg/tmp/originais";
-        processoSeletivo.CaminhoImagensProcessadas = "/Users/dclundberg/tmp/processadas";
-        processoSeletivo.CaminhoImagensRecortadas = "/Users/dclundberg/tmp/recortadas";
-        processoSeletivo.CaminhoImagensRejeitadas = "/Users/dclundberg/tmp/rejeitadas";
-        processoSeletivo.CaminhoImagensCorrecao = "/Users/dclundberg/tmp/correcao";
+        processoSeletivo.CaminhoImagens = source;
+        processoSeletivo.CaminhoImagensProcessadas = Path.Combine(root, "tmp/processadas");
+        processoSeletivo.CaminhoImagensRejeitadas = Path.Combine(root, "tmp/rejeitadas");
+        processoSeletivo.CaminhoImagensRecortadas = result;
 
         var process = new ProcessImage(processoSeletivo);
         process.Process(key);
       }
 
-      return new OkObjectResult(UploadService.Run(bucket, $"/Users/dclundberg/tmp/recortadas/c_red_{key}", $"correcao/{key}").Result);
+      string resultPath = Path.Combine(result, $"c_red_{key}");
+
+      return new OkObjectResult(UploadService.Run(bucket, resultPath, $"correcao/{key}").Result);
     }
 
     public async Task<bool> DownloadFile(string url, string path)

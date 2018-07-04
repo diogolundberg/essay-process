@@ -12,14 +12,13 @@ namespace app
 {
   public class Program
   {
-    public static void Main(string[] args)
-    {
-      BuildWebHost(args).Run();
-    }
+    public static void Main(string[] args) => BuildWebHost(args).Run();
 
-    public static IWebHost BuildWebHost(string[] args) =>
-        WebHost.CreateDefaultBuilder(args)
-            .UseStartup<Startup>()
-            .Build();
+    public static IWebHost BuildWebHost(string[] args)
+    {
+      return WebHost.CreateDefaultBuilder(args)
+        .ConfigureAppConfiguration(builder => builder.AddEnvironmentVariables())
+        .UseStartup<Startup>().Build();
+    }
   }
 }

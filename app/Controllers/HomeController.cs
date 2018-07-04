@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace app.Controllers
 {
@@ -6,9 +7,6 @@ namespace app.Controllers
   public class HomeController : Controller
   {
     [HttpGet]
-    public IActionResult Get()
-    {
-      return new OkObjectResult("ready");
-    }
+    public IActionResult Get() => new OkObjectResult("Ready!");
   }
 }
