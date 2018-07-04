@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Amazon.Runtime;
 using Amazon.S3;
+using app.Extensions;
 using app.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -25,7 +26,7 @@ namespace app
 
     public void ConfigureServices(IServiceCollection services)
     {
-      services.AddMvc();
+      services.AddWebApi();
       var awsOptions = Configuration.GetAWSOptions();
       awsOptions.Credentials = new EnvironmentVariablesAWSCredentials();
       services.AddDefaultAWSOptions(awsOptions);
