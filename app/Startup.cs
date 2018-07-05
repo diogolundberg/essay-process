@@ -23,10 +23,10 @@ namespace app
       awsOptions.Credentials = new EnvironmentVariablesAWSCredentials();
       services.AddDefaultAWSOptions(awsOptions);
       services.AddAWSService<IAmazonS3>();
-      services.AddScoped<UploadService, UploadService>();
-      services.AddScoped<ProcessImage, ProcessImage>();
+      services.AddScoped<Upload, Upload>();
+      services.AddScoped<Process, Process>();
       services.AddWebApi();
-      services.Configure<ImagesPath>(Configuration.GetSection("ImagesPath"));
+      services.Configure<Paths>(Configuration.GetSection("ImagesPath"));
     }
   }
 }

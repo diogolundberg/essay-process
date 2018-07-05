@@ -6,16 +6,12 @@ using System.Threading.Tasks;
 
 namespace app.Services
 {
-  public class UploadService
+  public class Upload
   {
-
     private IAmazonS3 S3 { get; }
-    PutObjectResponse response { get; set; }
+    private PutObjectResponse response { get; set; }
 
-    public UploadService(IAmazonS3 s3)
-    {
-      this.S3 = s3;
-    }
+    public Upload(IAmazonS3 s3) => this.S3 = s3;
 
     public async Task<PutObjectResponse> Run(string filePath, string key)
     {

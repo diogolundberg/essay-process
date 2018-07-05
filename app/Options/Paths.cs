@@ -5,7 +5,7 @@ using System.IO;
 
 namespace app.Options
 {
-  public class ImagesPath
+  public class Paths
   {
     public void CreatePaths()
     {

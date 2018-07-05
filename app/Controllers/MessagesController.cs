@@ -14,25 +14,25 @@ namespace app.Controllers
   [Produces("application/json")]
   public class MessagesController : Controller
   {
-    private UploadService UploadService { get; }
-    private ProcessImage ProcessImage { get; }
-    private ImagesPath ImagesPath { get; }
-    public MessagesController(UploadService uploadService,
-      ProcessImage processImage,
-      IOptions<ImagesPath> imagesPath)
+    private Upload UploadService { get; }
+    private Process Process { get; }
+    private Paths Paths { get; }
+    public MessagesController(Upload uploadService,
+      Process process,
+      IOptions<Paths> paths)
     {
       UploadService = uploadService;
-      ProcessImage = processImage;
-      ImagesPath = imagesPath.Value;
+      Process = process;
+      Paths = paths.Value;
     }
 
     [HttpPost]
     public IActionResult Post([FromBody]dynamic value)
     {
       string key = value.Records.First.s3["object"].key;
-      ImagesPath.CreatePaths();
-      if (DownloadFile(key).Result) ProcessImage.Run(key);
-      string resultPath = $"{ImagesPath.Cropped}/{key}";
+      Paths.CreatePaths();
+      if (DownloadFile(key).Result) Process.Run(key);
+      string resultPath = $"{Paths.Cropped}/{key}";
       return new OkObjectResult(UploadService.Run(resultPath, $"ready/{key}").Result);
     }
 
@@ -45,10 +45,10 @@ namespace app.Controllers
       {
         HttpResponseMessage response = requestTask.Result;
         response.EnsureSuccessStatusCode();
-        response.Content.ReadAsFileAsync($"{ImagesPath.Source}/{key}");
+        response.Content.ReadAsFileAsync($"{Paths.Source}/{key}");
       });
 
-      return System.IO.File.Exists($"{ImagesPath.Source}/{key}");
+      return System.IO.File.Exists($"{Paths.Source}/{key}");
     }
   }
 }
