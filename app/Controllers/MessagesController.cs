@@ -33,10 +33,10 @@ namespace app.Controllers
     [HttpPost]
     public IActionResult Post([FromBody]dynamic value)
     {
-      string key = value.Records.First.s3["object"].key;
       Paths.CreatePaths();
-      if (Download.Run(key).Result) Process.Run(key);
+      string key = value.Records.First.s3["object"].key;
       string resultPath = $"{Paths.Cropped}/{key}";
+      if (Download.Run(key).Result) Process.Run(key);
       return new OkObjectResult(Upload.Run(resultPath, $"ready/{key}").Result);
     }
   }
