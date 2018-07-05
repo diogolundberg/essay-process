@@ -1,6 +1,7 @@
 ﻿using Amazon.Runtime;
 using Amazon.S3;
 using app.Extensions;
+using app.Options;
 using app.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -23,7 +24,9 @@ namespace app
       services.AddDefaultAWSOptions(awsOptions);
       services.AddAWSService<IAmazonS3>();
       services.AddScoped<UploadService, UploadService>();
+      services.AddScoped<ProcessImage, ProcessImage>();
       services.AddWebApi();
+      services.Configure<ImagesPath>(Configuration.GetSection("ImagesPath"));
     }
   }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace app.Services
 {
-  public class UploadService : IDisposable
+  public class UploadService
   {
 
     private IAmazonS3 S3 { get; }
@@ -17,8 +17,9 @@ namespace app.Services
       this.S3 = s3;
     }
 
-    public async Task<PutObjectResponse> Run(string bucket, string filePath, string key)
+    public async Task<PutObjectResponse> Run(string filePath, string key)
     {
+      string bucket = "educat-images";
       try
       {
         var putRequest = new PutObjectRequest
@@ -44,10 +45,6 @@ namespace app.Services
         Console.WriteLine($"Params bucket = {bucket} filePath = {filePath} key = {key}");
       }
       return response;
-    }
-
-    public void Dispose()
-    {
     }
   }
 }
