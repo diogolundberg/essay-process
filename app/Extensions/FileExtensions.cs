@@ -4,10 +4,10 @@ using System.IO;
 
 namespace app.Extensions
 {
-  public class FileExtensions
+  public static class StringExtensions
   {
 
-    public static string ExecShell(string program, string args)
+    public static string Exec(this String arguments, string fileName)
     {
       Process p = new Process();
       p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
@@ -15,8 +15,8 @@ namespace app.Extensions
       p.StartInfo.RedirectStandardOutput = true;
       p.StartInfo.RedirectStandardError = true;
       p.StartInfo.CreateNoWindow = true;
-      p.StartInfo.FileName = program;
-      p.StartInfo.Arguments = args;
+      p.StartInfo.FileName = fileName;
+      p.StartInfo.Arguments = arguments;
       p.Start();
       p.WaitForExit();
 

@@ -26,16 +26,16 @@ namespace app.Services
       string cropped = Path.Combine(ImagesPath.Cropped, fileName);
 
       // Resize
-      FileExtensions.ExecShell(MAGICK, $" convert -resize 1070 \"{source}\" \"{resized}\"");
+      $"convert -resize 1070 {source} {resized}".Exec(MAGICK);
 
       // Align
-      FileExtensions.ExecShell(MAGICK, $"\"{resized}\" -verbose -deskew 40% -trim \"{aligned}\"");
+      $"{resized} -verbose -deskew 40% -trim {aligned}".Exec(MAGICK);
 
       // Black
-      FileExtensions.ExecShell(MAGICK, $"\"{aligned}\" -level 100,5000,1 -threshold 70% \"{black}\"");
+      $"{aligned} -level 100,5000,1 -threshold 70% {black}".Exec(MAGICK);
 
       // Crop
-      FileExtensions.ExecShell(MAGICK, $"convert -crop 980x1040+50+70 \"{black}\" \"{cropped}\"");
+      $"convert -crop 980x1040+50+70 {black} {cropped}".Exec(MAGICK);
 
       return true;
     }
