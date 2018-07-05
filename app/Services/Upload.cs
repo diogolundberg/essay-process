@@ -11,7 +11,7 @@ namespace app.Services
     private IAmazonS3 S3 { get; }
     private PutObjectResponse response { get; set; }
 
-    public Upload(IAmazonS3 s3) => this.S3 = s3;
+    public Upload(IAmazonS3 s3) => S3 = s3;
 
     public async Task<PutObjectResponse> Run(string filePath, string key)
     {

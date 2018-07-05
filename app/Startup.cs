@@ -23,6 +23,7 @@ namespace app
       awsOptions.Credentials = new EnvironmentVariablesAWSCredentials();
       services.AddDefaultAWSOptions(awsOptions);
       services.AddAWSService<IAmazonS3>();
+      services.AddScoped<Download, Download>();
       services.AddScoped<Upload, Upload>();
       services.AddScoped<Process, Process>();
       services.AddWebApi();
