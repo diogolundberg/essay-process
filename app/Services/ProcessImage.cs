@@ -25,17 +25,10 @@ namespace app.Services
       string black = Path.Combine(ImagesPath.Black, fileName);
       string cropped = Path.Combine(ImagesPath.Cropped, fileName);
 
-      // Resize
-      $"convert -resize 1070 {source} {resized}".Exec(MAGICK);
-
-      // Align
-      $"{resized} -verbose -deskew 40% -trim {aligned}".Exec(MAGICK);
-
-      // Black
-      $"{aligned} -level 100,5000,1 -threshold 70% {black}".Exec(MAGICK);
-
-      // Crop
-      $"convert -crop 980x1040+50+70 {black} {cropped}".Exec(MAGICK);
+      MAGICK.Exec($"convert -resize 1070 {source} {resized}");
+      MAGICK.Exec($"{resized} -verbose -deskew 40% -trim {aligned}");
+      MAGICK.Exec($"{aligned} -level 100,5000,1 -threshold 70% {black}");
+      MAGICK.Exec($"convert -crop 980x1040+50+70 {black} {cropped}");
 
       return true;
     }

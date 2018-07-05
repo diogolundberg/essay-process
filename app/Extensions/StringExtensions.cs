@@ -7,7 +7,7 @@ namespace app.Extensions
   public static class StringExtensions
   {
 
-    public static string Exec(this String arguments, string fileName)
+    public static string Exec(this String fileName, string arguments)
     {
       Process p = new Process();
       p.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
