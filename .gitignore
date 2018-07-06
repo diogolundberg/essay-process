@@ -30,6 +30,11 @@ x86/
 bld/
 [Bb]in/
 [Oo]bj/
+
+# Logs and temporary files
 [Ll]og/
 [Tt]mp/
 [Tt]emp/
+*.log
+*.tmp
+*.temp
