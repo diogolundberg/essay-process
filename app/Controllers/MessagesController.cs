@@ -15,18 +15,18 @@ namespace app.Controllers
   public class MessagesController : Controller
   {
     private Upload Upload { get; }
-    private Process Process { get; }
+    private Crop Crop { get; }
     private Paths Paths { get; }
     private Download Download { get; }
 
     public MessagesController(IOptions<Paths> paths,
-      Process process,
+      Crop crop,
       Download download,
       Upload upload)
     {
       Paths = paths.Value;
       Download = download;
-      Process = process;
+      Crop = crop;
       Upload = upload;
     }
 
@@ -36,7 +36,7 @@ namespace app.Controllers
       Paths.CreatePaths();
       string key = value.Records.First.s3["object"].key;
       string resultPath = $"{Paths.Cropped}/{key}";
-      if (Download.Run(key).Result) Process.Run(key);
+      if (Download.Run(key).Result) Crop.Run(key);
       return new OkObjectResult(Upload.Run(resultPath, $"ready/{key}").Result);
     }
   }

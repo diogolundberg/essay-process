@@ -25,8 +25,12 @@ namespace app
       services.AddAWSService<IAmazonS3>();
       services.AddScoped<Download, Download>();
       services.AddScoped<Upload, Upload>();
-      services.AddScoped<Process, Process>();
+      services.AddScoped<Align, Align>();
+      services.AddScoped<Barcode, Barcode>();
+      services.AddScoped<Crop, Crop>();
+      services.AddScoped<Resize, Resize>();
       services.AddWebApi();
+
       services.Configure<Paths>(Configuration.GetSection("ImagesPath"));
     }
   }
