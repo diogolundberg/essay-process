@@ -35,7 +35,3 @@ bld/
 *.log
 *.tmp
 *.temp
-
-# Release
-[Rr]elease/
-[Rr]eleases/
